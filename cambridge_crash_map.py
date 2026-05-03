@@ -110,12 +110,14 @@ for _, row in matched.iterrows():
     n, hosp, inj = row["crashes"], int(row["hospitalizations"]), int(row["injuries"])
     radius = 5 + 22 * (n / max_n) ** 0.55
 
-    if hosp > 0:
-        color, fill = "#922b21", "#e74c3c"
-    elif inj > 0:
-        color, fill = "#a04000", "#e67e22"
+    if hosp >= 5:
+        color, fill = "#7b241c", "#c0392b"   # dark red: severe
+    elif hosp >= 2:
+        color, fill = "#a04000", "#e67e22"   # orange: moderate
+    elif hosp == 1:
+        color, fill = "#9a7d0a", "#f1c40f"   # yellow: minor
     else:
-        color, fill = "#0e6655", "#1abc9c"
+        color, fill = "#0e6655", "#1abc9c"   # teal: no hospitalizations
 
     folium.CircleMarker(
         location=[lat, lon],
@@ -137,9 +139,10 @@ m.get_root().html.add_child(folium.Element("""
      padding:14px 18px;border-radius:10px;border:1px solid #ccc;
      font-family:sans-serif;font-size:12px;box-shadow:2px 2px 8px rgba(0,0,0,.15);min-width:200px;">
   <b style="font-size:13px;">Cambridge Crash Intersections</b><br><br>
-  <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#e74c3c;vertical-align:middle;margin-right:6px;"></span>Hospitalization(s)<br><br>
-  <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#e67e22;vertical-align:middle;margin-right:6px;"></span>Injuries only<br><br>
-  <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#1abc9c;vertical-align:middle;margin-right:6px;"></span>Property damage only<br><br>
+  <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#c0392b;vertical-align:middle;margin-right:6px;"></span>≥5 hospitalizations<br><br>
+  <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#e67e22;vertical-align:middle;margin-right:6px;"></span>2–4 hospitalizations<br><br>
+  <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#f1c40f;vertical-align:middle;margin-right:6px;"></span>1 hospitalization<br><br>
+  <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#1abc9c;vertical-align:middle;margin-right:6px;"></span>No hospitalizations<br><br>
   <span style="font-size:11px;color:#888;">Circle size ∝ crash count &nbsp;|&nbsp; ≥3 crashes shown</span>
 </div>
 """))

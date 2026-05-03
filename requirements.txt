@@ -1,3 +1,4 @@
 pandas
 folium
 requests
+osmnx
